@@ -219,6 +219,7 @@ def main():
     }
 
     TOPPING_COSTS = { 
+        'Extra Cheese':1.50,
         'Mushrooms': 1.00,
         'Olives': 0.75,
         'Bacon': 2.00
