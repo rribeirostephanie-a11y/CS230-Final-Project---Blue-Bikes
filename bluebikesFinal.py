@@ -9,21 +9,27 @@ This program ... (a few sentences about your program and the queries and charts)
 References:
 (and links to any websites or external tutorials you may have used)
 """
-
 import streamlit as st 
 import pandas as pd
 import matplotlib.pyplot as plt 
 import pydeck as pdk
+import zipfile
 
-DATA_FILE = "202009-bluebikes-tripdata(in).csv"
 
 #ths is going to give back the toal trips nad average duration  - return two functions
+ZIP_FILE = "202009-bluebikes-tripdata(in).csv.zip"
+DATA_FILE = "202009-bluebikes-tripdata(in).csv"
+
 @st.cache_data
-def load_clean_data(files_name, max_rows=None):
-    df = pd.read_csv(files_name, nrows=max_rows)
+def load_clean_data(zip_file, data_file, max_rows=None):
+    with zipfile.ZipFile(zip_file, "r") as zip_ref:
+        file_list = zip_ref.namelist()
+        csv_path = [file for file in file_list if file.endswith(data_file)][0]
+
+        with zip_ref.open(csv_path) as file:
+            df = pd.read_csv(file, nrows=max_rows)
 
     df["trip_minutes"] = df["tripduration"] / 60
-
     df["starttime"] = pd.to_datetime(df["starttime"], errors="coerce", format="mixed")
     df = df.dropna(subset=["starttime"])
     df["hour"] = df["starttime"].dt.hour
@@ -49,8 +55,8 @@ def main():
              "Use the filters to explore riding pattersn, busy stations, and destinations."
     )
     
-    df, totalTrips, averageDuration = load_clean_data(DATA_FILE)
-    
+    df, totalTrips, averageDuration = load_clean_data(ZIP_FILE, DATA_FILE)
+
     #get the rider types and try ot make it look cleaner
     userTypes = sorted(df["usertype"].dropna().unique()) #removes blanks 
 
