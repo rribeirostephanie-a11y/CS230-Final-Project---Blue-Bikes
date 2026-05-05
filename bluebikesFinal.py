@@ -51,7 +51,7 @@ def main():
 
     st.title("Blue Bike Boston Trip Explorer")
 
-    st.write("this app explores how people have used bikes in Boston."
+    st.write("This app explores how people have used bikes in Boston."
              "Use the filters to explore riding pattersn, busy stations, and destinations."
     )
     
@@ -115,7 +115,7 @@ def main():
 
     #query number 2 
     st.header("2. Which blue bikes stations are the busiest, and where are they located?")
-    st.write ("Explain what this sections does here")
+    st.write ("The busiest station in 2020 and their locations. ")
 
     top_number = st.slider("Choose how many top stations to show:", 5,25,10)
     top_stations = get_top_counts(filters_df,"start station name", top_number)
